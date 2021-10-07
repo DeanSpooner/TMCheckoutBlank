@@ -9,7 +9,15 @@ const checkout = (catalogue, basket) => {
     }
   }
   for (const prop in basketTotals) {
-    totalAmount += catalogue[prop] * basketTotals[prop];
+    if (catalogue.deals[prop]) {
+      const leftover = basketTotals[prop] % catalogue.deals[prop].amount;
+      totalAmount += leftover * catalogue[prop];
+      totalAmount +=
+        (basketTotals[prop] - leftover) *
+        (catalogue.deals[prop].price / catalogue.deals[prop].amount);
+    } else {
+      totalAmount += catalogue[prop] * basketTotals[prop];
+    }
   }
   return totalAmount;
 };
